@@ -1,0 +1,52 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: argocd-cluster
+  region: ap-northeast-2
+
+iam:
+  withOIDC: true
+
+vpc:
+  subnets:
+    public:
+      ap-northeast-2a:
+        id: subnet-008b6606f3b39a38e
+      ap-northeast-2b:
+        id: subnet-06a21770df228cb3f
+      ap-northeast-2c:
+        id: subnet-0bef39e76280e3876
+    private:
+      ap-northeast-2a:
+        id: subnet-062948ba90f6102ba
+      ap-northeast-2b:
+        id: subnet-0cc14e3e54f077d20
+      ap-northeast-2c:
+        id: subnet-0ce1a2df95a8511e8
+
+managedNodeGroups:
+  - name: argocd-nodegroup
+    minSize: 2
+    desiredCapacity: 2
+    maxSize: 16
+    instanceType: c5.large
+    privateNetworking: true
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
+        autoScaler: true
+        externalDNS: true
+        certManager: true
+        appMesh: true
+        appMeshPreview: true
+        ebs: true
+        fsx: true
+        efs: true
+        awsLoadBalancerController: true
+        xRay: true
+        cloudWatch: true
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["*"]
